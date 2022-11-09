@@ -32,7 +32,7 @@ describe('ERC20CappedCustom: custom mint', () => {
 
   it('custom mint gets reverted if no total supply', async () => {
     await expect(
-      erc20CappedCustomContract.connect(owner).customMint()
+      erc20CappedCustomContract.connect(owner).customMintAll()
     ).to.revertedWith('Total supply is zero');
   });
 
@@ -46,11 +46,11 @@ describe('ERC20CappedCustom: custom mint', () => {
       .mint(user1.address, user1Amount);
 
     await expect(
-      erc20CappedCustomContract.connect(user1).customMint()
+      erc20CappedCustomContract.connect(user1).customMintAll()
     ).to.revertedWith('Ownable: caller is not the owner');
   });
 
-  it('custom mint should work fine', async () => {
+  it('customMintAll should work fine', async () => {
     await erc20CappedCustomContract
       .connect(owner)
       .mint(user1.address, user1Amount);
@@ -67,6 +67,6 @@ describe('ERC20CappedCustom: custom mint', () => {
       .connect(user3)
       .transfer(user4.address, user4Amount);
 
-    await erc20CappedCustomContract.connect(owner).customMint();
+    await erc20CappedCustomContract.connect(owner).customMintAll();
   });
 });

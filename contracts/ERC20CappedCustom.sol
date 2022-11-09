@@ -14,7 +14,7 @@ contract ERC20CappedCustom is ERC20Capped, Ownable {
     uint256 public mintPercent = 20;
 
     event EvtSetMintPercent(uint256 mintPercent);
-    event EvtCustomMint(uint256 totalAccountsMinted, uint256 totalAmountMinted);
+    event EvtCustomMintAll(uint256 totalAccountsMinted, uint256 totalAmountMinted);
 
     constructor(
         string memory name_,
@@ -52,7 +52,8 @@ contract ERC20CappedCustom is ERC20Capped, Ownable {
         _mint(to_, amount_);
     }
 
-    function customMint() external onlyOwner {
+    // Subject to gas limit and thus can be reverted
+    function customMintAll() external onlyOwner {
         require(totalSupply() > 0, "Total supply is zero");
 
         uint256 mintAmount = (mintPercent * totalSupply()) / 100;
@@ -79,6 +80,6 @@ contract ERC20CappedCustom is ERC20Capped, Ownable {
             "Totally-minted accounts exceeds the total token holder list"
         );
 
-        emit EvtCustomMint(totalAccountsMinted, totalAmountMinted);
+        emit EvtCustomMintAll(totalAccountsMinted, totalAmountMinted);
     }
 }
