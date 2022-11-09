@@ -1,0 +1,40 @@
+{
+  "name": "hardhat-template",
+  "version": "0.0.1",
+  "description": "ERC20Capped Custom Mint",
+  "author": "Tien-Trung, Trinh",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rimraf artifacts cache",
+    "compile": "yarn clean && npx hardhat compile",
+    "test": "npx hardhat test",
+    "node": "npx hardhat node",
+    "deploy-hardhat": "npx hardhat run scripts/deploy.js --network hardhat"
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "@typechain/ethers-v5": "^7.0.1",
+    "@typechain/hardhat": "^2.0.2",
+    "@types/chai": "^4.2.18",
+    "@types/mocha": "^8.2.2",
+    "@types/node": "^15.12.2",
+    "chai": "^4.3.4",
+    "ethereum-waffle": "^3.4.4",
+    "ethers": "^5.4.1",
+    "hardhat": "^2.3.3",
+    "hardhat-contract-sizer": "^2.5.1",
+    "hardhat-gas-reporter": "^1.0.4",
+    "rimraf": "^3.0.2",
+    "ts-generator": "^0.1.1",
+    "ts-node": "^10.0.0",
+    "typechain": "^5.0.0",
+    "typescript": "^4.3.2"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.2.0",
+    "@types/jest": "^26.0.24",
+    "jest": "^27.0.6",
+    "ts-jest": "^27.0.4"
+  }
+}
