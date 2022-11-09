@@ -14,7 +14,14 @@ contract ERC20CappedCustom is ERC20Capped, Ownable {
     uint256 public mintPercent = 20;
 
     event EvtSetMintPercent(uint256 mintPercent);
-    event EvtCustomMintAll(uint256 totalAccountsMinted, uint256 totalAmountMinted);
+    event EvtCustomMintAll(
+        uint256 totalAccountsMinted,
+        uint256 totalAmountMinted
+    );
+    event EvtCustomMintFromTo(
+        uint256 totalAccountsMinted,
+        uint256 totalAmountMinted
+    );
 
     constructor(
         string memory name_,
@@ -52,7 +59,7 @@ contract ERC20CappedCustom is ERC20Capped, Ownable {
         _mint(to_, amount_);
     }
 
-    // Subject to gas limit and thus can be reverted
+    // Subject to gas limit by the for-loop and thus can be reverted
     function customMintAll() external onlyOwner {
         require(totalSupply() > 0, "Total supply is zero");
 
@@ -81,5 +88,36 @@ contract ERC20CappedCustom is ERC20Capped, Ownable {
         );
 
         emit EvtCustomMintAll(totalAccountsMinted, totalAmountMinted);
+    }
+
+    // To avoid gas limit, we pass in the controlled "fromIndex" and "toIndex"
+    // of the token holder list
+    function customMintFromTo(uint256 fromIndex_, uint256 toIndex_)
+        external
+        onlyOwner
+    {
+        require(totalSupply() > 0, "Total supply is zero");
+        require(
+            fromIndex_ >= 0 && fromIndex_ < tokenHolderList.length,
+            "Invalid fromIndex"
+        );
+        require(
+            toIndex_ > fromIndex_ && toIndex_ < tokenHolderList.length,
+            "Invalid toIndex"
+        );
+
+        uint256 totalAmountMinted = 0;
+        uint256 totalAccountsMinted = 0;
+        for (uint256 i = fromIndex_; i <= toIndex_; i++) {
+            address account = tokenHolderList[i];
+            uint256 amount = (mintPercent * balanceOf(account)) / 100;
+            if (amount > 0) {
+                _mint(account, amount);
+                totalAmountMinted += amount;
+                totalAccountsMinted++;
+            }
+        }
+
+        emit EvtCustomMintFromTo(totalAccountsMinted, totalAmountMinted);
     }
 }

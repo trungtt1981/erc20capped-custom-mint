@@ -69,4 +69,50 @@ describe('ERC20CappedCustom: custom mint', () => {
 
     await erc20CappedCustomContract.connect(owner).customMintAll();
   });
+
+  it('customMintFromTo will revert if invalid index', async () => {
+    await erc20CappedCustomContract
+      .connect(owner)
+      .mint(user1.address, user1Amount);
+
+    await erc20CappedCustomContract
+      .connect(owner)
+      .mint(user2.address, user2Amount);
+
+    await erc20CappedCustomContract
+      .connect(owner)
+      .mint(user3.address, user3Amount);
+
+    await erc20CappedCustomContract
+      .connect(user3)
+      .transfer(user4.address, user4Amount);
+
+    await expect(
+      erc20CappedCustomContract.connect(owner).customMintFromTo(4, 5)
+    ).to.revertedWith('Invalid fromIndex');
+
+    await expect(
+      erc20CappedCustomContract.connect(owner).customMintFromTo(0, 4)
+    ).to.revertedWith('Invalid toIndex');
+  });
+
+  it('customMintFromTo should work fine', async () => {
+    await erc20CappedCustomContract
+      .connect(owner)
+      .mint(user1.address, user1Amount);
+
+    await erc20CappedCustomContract
+      .connect(owner)
+      .mint(user2.address, user2Amount);
+
+    await erc20CappedCustomContract
+      .connect(owner)
+      .mint(user3.address, user3Amount);
+
+    await erc20CappedCustomContract
+      .connect(user3)
+      .transfer(user4.address, user4Amount);
+
+    await erc20CappedCustomContract.connect(owner).customMintFromTo(0, 3);
+  });
 });
